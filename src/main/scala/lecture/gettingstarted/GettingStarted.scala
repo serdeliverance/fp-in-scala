@@ -1,9 +1,8 @@
-package lecture.ch02
+package lecture.gettingstarted
 
 import scala.annotation.tailrec
 
-object Ch02 extends App{
-
+object PolymorphicFunctions {
   def findFirst[A](p: A => Boolean, elements: List[A]) = {
     @tailrec
     def helper(n: Int, elements: List[A] ): Int = {
@@ -37,6 +36,7 @@ object Ch02 extends App{
   println(isSorted(sampleList, (a: String, b: String) => a.compareTo(b) > 0))
   println(isSorted(sampleList2, (a: String, b: String) => a.compareTo(b) > 0))
 
+  // Ex: apply method
   class PowYou {
     def apply(number: Double) = number * number
   }
@@ -44,6 +44,26 @@ object Ch02 extends App{
   val powYou = new PowYou()
 
   println(powYou(3.24))
+}
 
+
+object FollowinTypesToImplementations {
+  // Ex: partial function
   def partial1[A, B, C](a: A, f: (A, B) => C): B => C = (b: B) => f(a, b)
+
+  // Ex 2.3: currying function
+  def curry[A,B,C](f: (A,B) => C): A => (B => C) =
+    (a: A) => f(a, _)   // or it could be: a => b => f(a,b)
+
+  // Ex 2.4: uncurry
+  def uncurry[A, B, C](f: A => B => C): (A, B) => C = (a: A, b: B) => f(a)(b)
+
+  // Ex 2.5: composed function
+  def compose[A,B,C](f: A => B, g: B => C): A => C = (a: A) => g(f(a))
+
+  /*
+    Recall that f y g are (from the Scala point of view) Function1 instances, and the standard
+    library has a method andThen to compose functions. The following is an example:
+   */
+  def composeAlt[A,B,C](f: A => B, g: B => C): A => C = f andThen g
 }
