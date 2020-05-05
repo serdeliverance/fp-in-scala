@@ -1,8 +1,8 @@
-package lecture.ch01
+package lecture.intro
 
 class Cafe extends App {
 
-  import lecture.ch01.Cafe._
+  import lecture.intro.Cafe._
 
   def buyCoffee(cc: CreditCard): (Coffee, Charge) = {
     val cup = new Coffee()

@@ -158,9 +158,43 @@ object List {
   // Ex 3.15
   // TODO
 
-  // Ex 3.16 up to 3.23
-  // TODO: all of them
+  // Ex 3.16
+  // TODO
+
+  // Ex 3.17
+  // TODO
+
+  // Ex 3.18
+  // TODO
+
+  // Ex 3.19
+  // TODO
+
+  // Ex 3.20
+  // TODO
+
+  // Ex 3.21
+  // TODO
+
+  // Ex 3.22
+  // TODO
+
+  // Ex 3.23
+  // TODO
 
   // Ex 3.24 HARD
   // TODO
+}
+
+sealed trait Tree[+A]
+case class Leaf[A](value: A) extends Tree[A]
+case class Branch[A](left: Tree[A], right: Tree[A]) extends Tree[A]
+
+object Tree {
+
+  // Ex 3.25
+  // TODO
+  def size[A](tree: Tree[A]): Int = ???
+
+  // Ex. 3.26 up to 3.29
 }
