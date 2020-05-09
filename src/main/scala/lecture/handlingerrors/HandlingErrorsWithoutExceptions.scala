@@ -44,4 +44,16 @@ object HandlingErrorsWithoutExceptions {
     else Some(xs.sum/xs.length)
   }
 
+  // Ex 4.2
+  def variance(xs: Seq[Double]): Option[Double] = {
+    mean(xs) flatMap(m => mean(xs.map(x => math.pow(x - m, 2))))
+  }
+
+  /**
+   * flatMap: it similar to map, excepts that the function that we provide to transform the
+   * result can itself fail.
+   *
+   * It is useful to model a computation with multiples stages when any of these can fail. It that case,
+   * the computation is abort as soon as the first fail is encountered
+   */
 }
