@@ -33,7 +33,9 @@ case class Some[+A](get: A) extends Option[A]
 case object None extends Option[Nothing]
 
 
-object HandlingErrorsWithoutExceptions {
+object Option {
+
+  import InsuranceApi._
 
   def mean(xs: Seq[Double]):Option[Double] = {
     if (xs.isEmpty) None
@@ -58,8 +60,6 @@ object HandlingErrorsWithoutExceptions {
     try Some(a)
     catch { case e: Exception => None}
 
-  def insuranceRateQuote(age: Int, numberOfSpeedingTickets: Int): Double = ???
-
   // Ex 4.3: my solution
   def map2[A,B,C](a: Option[A], b: Option[B])(f: (A,B) => C): Option[C] = (a, b) match {
     case a == None || b == None => None
@@ -70,21 +70,46 @@ object HandlingErrorsWithoutExceptions {
   def map2b[A,B,C](a: Option[A], b: Option[B])(f: (A,B) => C): Option[C] =
     a flatMap (aa => b map (bb => f(aa,bb)))
 
+  // map2 implementation using for comprehensions
+  def map2c[A,B,C](a:Option[A],b:Option[B])(f: (A,B)=>C):Option[C] =
+    for {
+      aa <- a
+      bb <- b
+    } yield f(aa,bb)
+
   def parseInsuranceRateQuote(age: String, numberOfSpeedingTickets: String): Option[Double] = {
     val optAge = Try(age.toInt)
     val optTickets = Try(numberOfSpeedingTickets.toInt)
 
     map2b(optAge, optTickets)(insuranceRateQuote)
   }
+
+  // Ex 4.4 with recursion
+  def sequence[A](a: List[Option[A]]): Option[List[A]] = {
+    a match {
+      case Nil => Some(Nil)
+      case h :: t => h flatMap (hh => sequence(t) map (hh :: _))
+    }
+  }
+
+  // Ex 4.4 using foldright and map2
+  def sequence_1[A](a: List[Option[A]]): Option[List[A]] =
+    a.foldRight[Option[List[A]]](Some(Nil))((x, y) => map2(x,y)(_ :: _))
+
+  def parseInts(as: List[String]): Option[List[Int]] =
+    sequence(as map (a => Try(a.toInt)))
+
+  // Ex 4.5
+  def traverse[A,B](a: List[A])(f:A=>Option[B]):Option[List[B]] =
+    a match {
+      case Nil => Some(Nil)
+      case h :: t => map2(f(h), traverse(t)(f))(_ :: _)
+    }
+
+  def traverse_1[A,B](a: List[A])(f:A=>Option[B]):Option[List[B]] =
+    a.foldRight[Option[List[B]]](Some(Nil))((h,t)=>map2(f(h),t)(_ :: _))
 }
 
-object Playground extends App {
-
-  import HandlingErrorsWithoutExceptions._
-
-  val absO = lift(math.abs)
-
-  val abs0result = absO(Some(-2)).getOrElse(throw new Exception("illegal input"))
-
-  println(abs0result)
+object InsuranceApi {
+  def insuranceRateQuote(age: Int, numberOfSpeedingTickets: Int): Double = ???
 }
