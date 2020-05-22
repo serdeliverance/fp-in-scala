@@ -60,14 +60,8 @@ object Option {
     try Some(a)
     catch { case e: Exception => None}
 
-  // Ex 4.3: my solution
-  def map2[A,B,C](a: Option[A], b: Option[B])(f: (A,B) => C): Option[C] = (a, b) match {
-    case a == None || b == None => None
-    case (Some(elemA), Some(elemB)) => Some(f(elemA,elemB))
-  }
-
   // Ex 4.3: solution from book using flatMap
-  def map2b[A,B,C](a: Option[A], b: Option[B])(f: (A,B) => C): Option[C] =
+  def map2[A,B,C](a: Option[A], b: Option[B])(f: (A,B) => C): Option[C] =
     a flatMap (aa => b map (bb => f(aa,bb)))
 
   // map2 implementation using for comprehensions
@@ -81,7 +75,7 @@ object Option {
     val optAge = Try(age.toInt)
     val optTickets = Try(numberOfSpeedingTickets.toInt)
 
-    map2b(optAge, optTickets)(insuranceRateQuote)
+    map2(optAge, optTickets)(insuranceRateQuote)
   }
 
   // Ex 4.4 with recursion
